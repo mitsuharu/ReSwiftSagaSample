@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "reswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReSwift/ReSwift",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e94737282850fa038b625b4e351d1608a3d02cee"
+      }
+    }
+  ],
+  "version" : 2
+}
