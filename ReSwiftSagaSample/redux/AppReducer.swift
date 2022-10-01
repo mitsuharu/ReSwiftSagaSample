@@ -10,15 +10,12 @@ import ReSwift
 
 func appReducer(action: Action, state: AppState?) -> AppState {
 
-    let state = state ?? AppState.initialState()
-
-    var nextCounter = state.counter
-    if action is CounterAction {
-        nextCounter = counterReducer(action: action as! CounterAction,
-                                     state: state.counter)
+    guard let state else{
+        return AppState.initialState()
     }
-    
+
     return AppState(
-        counter: nextCounter
+        counter: counterReducer(action: action,
+                                state: state.counter)
     )
 }

@@ -6,8 +6,13 @@
 //
 
 import Foundation
+import ReSwift
 
-func counterReducer(action: CounterAction, state: CounterState) -> CounterState {
+func counterReducer(action: Action, state: CounterState) -> CounterState {
+    
+    guard let action = action as? CounterAction else {
+        return state
+    }
     
     switch action {
     case .increase:
@@ -21,6 +26,6 @@ func counterReducer(action: CounterAction, state: CounterState) -> CounterState 
     
     case .clear:
         return CounterState.initialState()
-
     }
+
 }
