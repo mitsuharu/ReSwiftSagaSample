@@ -12,7 +12,8 @@ func makeAppStore() -> Store<AppState> {
 
     let store = Store<AppState>(
         reducer: appReducer,
-        state: AppState.initialState()
+        state: AppState.initialState(),
+        middleware: [loggingMiddleware]
     )
 
     return store

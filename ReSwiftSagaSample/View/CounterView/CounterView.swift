@@ -23,6 +23,9 @@ struct CounterView: View {
                 Button("clear") {
                     viewModel.clear()
                 }
+                Button("move_10") {
+                    viewModel.move(count: 10 )
+                }
             }.padding(10)
             Text("Count: \(viewModel.count)")
         }

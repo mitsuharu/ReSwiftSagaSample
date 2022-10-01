@@ -24,6 +24,7 @@
 		9B3E0E5628E84B1300964B21 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5528E84B1300964B21 /* RootView.swift */; };
 		9B3E0E5B28E84B6900964B21 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5A28E84B6900964B21 /* CounterView.swift */; };
 		9B3E0E5E28E84BC900964B21 /* CounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */; };
+		9B3E0E6528E85C1900964B21 /* LoggingMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E6428E85C1900964B21 /* LoggingMiddleware.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		9B3E0E5528E84B1300964B21 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		9B3E0E5A28E84B6900964B21 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterViewModel.swift; sourceTree = "<group>"; };
+		9B3E0E6428E85C1900964B21 /* LoggingMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingMiddleware.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 				9B3E0E3128E8414400964B21 /* AppState.swift */,
 				9B3E0E3228E8414400964B21 /* AppReducer.swift */,
 				9B3E0E3328E8414400964B21 /* AppStore.swift */,
+				9B3E0E6228E85BFC00964B21 /* middlewares */,
 				9B3E0E3428E8414400964B21 /* modules */,
 			);
 			path = redux;
@@ -210,6 +213,22 @@
 				9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		9B3E0E6228E85BFC00964B21 /* middlewares */ = {
+			isa = PBXGroup;
+			children = (
+				9B3E0E6328E85C0500964B21 /* logging */,
+			);
+			path = middlewares;
+			sourceTree = "<group>";
+		};
+		9B3E0E6328E85C0500964B21 /* logging */ = {
+			isa = PBXGroup;
+			children = (
+				9B3E0E6428E85C1900964B21 /* LoggingMiddleware.swift */,
+			);
+			path = logging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -351,6 +370,7 @@
 				9B3E0E4E28E8418A00964B21 /* CounterReducer.swift in Sources */,
 				9B3E0E3F28E8414400964B21 /* AppState.swift in Sources */,
 				9B3E0E5E28E84BC900964B21 /* CounterViewModel.swift in Sources */,
+				9B3E0E6528E85C1900964B21 /* LoggingMiddleware.swift in Sources */,
 				9B3E0E5028E8419A00964B21 /* CounterSelectors.swift in Sources */,
 				9B3E0E4128E8414400964B21 /* AppStore.swift in Sources */,
 				9B3E0E5628E84B1300964B21 /* RootView.swift in Sources */,
