@@ -8,8 +8,9 @@
 import Foundation
 import ReSwift
 
-func counterReducer(action: Action, state: CounterState) -> CounterState {
+func counterReducer(action: Action, state: CounterState?) -> CounterState {
     
+    let state = state ?? CounterState.initialState()
     guard let action = action as? CounterAction else {
         return state
     }
