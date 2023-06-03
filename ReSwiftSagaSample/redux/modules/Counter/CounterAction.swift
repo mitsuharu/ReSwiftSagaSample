@@ -8,7 +8,7 @@
 import Foundation
 import ReSwift
 
-enum CounterAction: Action {
+enum CounterAction: SagaAction {
     case increase
     case decrease
     case move(count: Int)
