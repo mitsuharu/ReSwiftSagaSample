@@ -24,6 +24,8 @@ let increaseSaga: Saga = { (_ action: Action?) in
     }
     print("increaseSaga", action ?? "")
     
+    let aaaa = await take(CounterAction.decrease as! (any SagaAction))
+    print("increaseSaga aaaa", aaaa )
 }
 
 let increaseSaga2: Saga = { (_ action: Action?) in
