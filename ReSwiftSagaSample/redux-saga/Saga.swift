@@ -137,7 +137,10 @@ final class SagaProvider {
     func match(_ action: any SagaAction, receive: @escaping (_ action: any SagaAction) -> Void ){
         print("match action:", action)
         
-        subject.filter {
+    // 一度限りの監視を実現する。これがないと、withCheckedContinuationでクラッシュする
+        var cancellable: AnyCancellable? = nil
+        
+        cancellable =  subject.filter {
             print("match filter $0:", $0, "action:", action)
             return $0.isEqualTo(action)
         }.sink { [weak self] in
@@ -147,8 +150,9 @@ final class SagaProvider {
             if $0.isEqualTo(action){
                 receive(action)
             }
+            cancellable?.cancel()
             print("match $0:", $0, "action:", action, "receiveValue/cancellables:", self?.cancellables.count)
-        }.store(in: &cancellables)
+        } //.store(in: &cancellables)
         
         print("match action:", action, "cancellables:", cancellables.count)
     }

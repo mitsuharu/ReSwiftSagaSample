@@ -30,8 +30,8 @@ let increaseSaga: Saga = { (_ action: Action?) async in
     print("increaseSaga", action ?? "", "end")
     
     
-//    let aaaa = await take(CounterAction.decrease as (any SagaAction))
-//    print("increaseSaga take:", aaaa )
+    let aaaa = await take(CounterAction.decrease as (any SagaAction))
+    print("increaseSaga take:", aaaa )
 }
 
 let increaseSaga2: Saga = { (_ action: Action?) in
