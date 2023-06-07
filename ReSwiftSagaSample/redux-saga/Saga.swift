@@ -34,10 +34,28 @@ extension SagaAction {
  */
 typealias Saga<T> = (_ action: (any SagaAction)?) async -> T
 
-enum TakePattern {
-    case every
-    case leading
-    case latest
+enum SagaPattern {
+    case take
+    case takeEvery
+    case takeLeading
+    case takeLatest
+}
+
+struct SagaEffect<T>: Hashable {
+    
+    let identifier = UUID().uuidString
+        
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(identifier)
+    }
+    
+    static func == (lhs: SagaEffect<T>, rhs: SagaEffect<T>) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+    
+    let pattern: SagaPattern
+    let action: (any SagaAction)?
+    let saga: Saga<T>?
 }
 
 // Provider
@@ -46,10 +64,12 @@ final class SagaProvider {
     public static let shared = SagaProvider()
     
     private let subject = PassthroughSubject<any SagaAction, Error>()
+    private var effects = Set<SagaEffect<Any>>()
     
-    // TODO: 類似なので管理をやめる、どれかにする
     private var cancellables = Set<AnyCancellable>()
-    private var currentTasks: [String:AnyCancellable] = [:]
+    private var currentTasks = [String:Task<(), Never>]()
+    
+    var activeContinuation: CheckedContinuation<any SagaAction, Never>? = nil
     
     /**
      action を発行する
@@ -58,18 +78,79 @@ final class SagaProvider {
         subject.send(action)
     }
     
+    func addEffect(_ effect:SagaEffect<Any>){
+        effects.insert(effect)
+    }
+    
+    init() {
+        observe()
+    }
+    
+    func observe(){
+        subject.sink { [weak self] in
+            self?.complete($0)
+        } receiveValue: { [weak self] action in
+            
+            print("observe action:", action)
+
+            self?.effects.filter { $0.action?.isEqualTo(action) == true }.forEach({ effect in
+                self?.execute(effect)
+            })
+        }.store(in: &self.cancellables)
+    }
+    
+    func execute(_ effect: SagaEffect<Any>) {
+        print("execute effect:", effect)
+        if effect.pattern == .takeEvery, let saga = effect.saga{
+            Task.detached{
+                let _ = await saga(effect.action)
+            }
+        }
+        if effect.pattern == .takeLatest, let saga = effect.saga{
+            print("currentTasks[effect.identifier]", currentTasks[effect.identifier])
+            currentTasks[effect.identifier]?.cancel()
+            self.currentTasks[effect.identifier] = nil
+            currentTasks[effect.identifier] = Task.detached{
+                let _ = await saga(effect.action)
+                print("taleLatest done")
+                self.currentTasks[effect.identifier]?.cancel()
+                self.currentTasks[effect.identifier] = nil
+            }
+        }
+        if effect.pattern == .takeLeading, let saga = effect.saga{
+            if(self.currentTasks[effect.identifier] != nil){
+                return
+            }
+            currentTasks[effect.identifier] = Task.detached{
+                let _ = await saga(effect.action)
+                self.currentTasks[effect.identifier]?.cancel()
+                self.currentTasks[effect.identifier] = nil
+            }
+        }
+    }
+    
+    
+    
     /**
      特定の action を監視して、イベントを実行する
      */
     func match(_ action: any SagaAction, receive: @escaping (_ action: any SagaAction) -> Void ){
-        subject.sink { [weak self] in
+        print("match action:", action)
+        
+        subject.filter {
+            print("match filter $0:", $0, "action:", action)
+            return $0.isEqualTo(action)
+        }.sink { [weak self] in
             self?.complete($0)
-        } receiveValue: {
+        } receiveValue: { [weak self] in
             // プロトコルでは直接比較(==)できないための回避
             if $0.isEqualTo(action){
                 receive(action)
             }
+            print("match $0:", $0, "action:", action, "receiveValue/cancellables:", self?.cancellables.count)
         }.store(in: &cancellables)
+        
+        print("match action:", action, "cancellables:", cancellables.count)
     }
     
     func cancel() {

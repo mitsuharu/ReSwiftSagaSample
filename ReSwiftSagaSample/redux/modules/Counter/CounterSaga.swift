@@ -9,23 +9,29 @@ import Foundation
 import ReSwift
 
 let counterSaga: Saga = { (_ action: Action?) in
+    
 //    takeEvery(CounterAction.increase, effect: increaseSaga)
-//    takeEvery(CounterAction.increase, effect: increaseSaga2)
+//    
+//    takeEvery(CounterAction.clear, effect: increaseSaga)
+    
+//    SagaProvider.shared.takeEvery(CounterAction.increase, effect: increaseSaga2)
     
 
     takeLatest(CounterAction.increase, effect: increaseSaga)
-    takeLatest(CounterAction.increase, effect: increaseSaga2)
+//    takeLatest(CounterAction.increase, effect: increaseSaga2)
 }
 
-let increaseSaga: Saga = { (_ action: Action?) in
+let increaseSaga: Saga = { (_ action: Action?) async in
+    print("increaseSaga", action ?? "", "start")
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-        print("1秒後の処理 increaseSaga")
+    Task{
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
     }
-    print("increaseSaga", action ?? "")
+    print("increaseSaga", action ?? "", "end")
     
-    let aaaa = await take(CounterAction.decrease as! (any SagaAction))
-    print("increaseSaga aaaa", aaaa )
+    
+//    let aaaa = await take(CounterAction.decrease as (any SagaAction))
+//    print("increaseSaga take:", aaaa )
 }
 
 let increaseSaga2: Saga = { (_ action: Action?) in
