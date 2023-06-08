@@ -16,16 +16,13 @@ import Combine
 protocol SagaAction: Action, Hashable {}
 
 extension SagaAction {
+    
     /**
      SagaActionの比較関数
      - プロトコルでは直接比較(==)できないための回避策です
      */
     func isEqualTo(_ arg: any SagaAction) -> Bool {
         return self.hashValue == arg.hashValue
-    }
-    
-    func hashKey() -> String{
-        return String(self.hashValue)
     }
 }
 
@@ -34,6 +31,9 @@ extension SagaAction {
  */
 typealias Saga<T> = (_ action: (any SagaAction)?) async -> T
 
+/**
+ 構造体 SagaEffect でサポートする副作用
+ */
 enum SagaPattern {
     case take
     case takeEvery
@@ -65,11 +65,12 @@ final class SagaProvider {
     
     private let subject = PassthroughSubject<any SagaAction, Error>()
     private var effects = Set<SagaEffect<Any>>()
-    
-    private var cancellables = Set<AnyCancellable>()
+    private var cancellable: AnyCancellable? = nil
     private var currentTasks = [String:Task<(), Never>]()
-    
-    var activeContinuation: CheckedContinuation<any SagaAction, Never>? = nil
+
+    init() {
+        observe()
+    }
     
     /**
      action を発行する
@@ -78,87 +79,92 @@ final class SagaProvider {
         subject.send(action)
     }
     
+    /**
+     takeEveryなどの副作用を記録する
+     */
     func addEffect(_ effect:SagaEffect<Any>){
         effects.insert(effect)
     }
     
-    init() {
-        observe()
-    }
-    
-    func observe(){
-        subject.sink { [weak self] in
+    /**
+     middlewareから発行されるactionを受け取る
+     */
+    private func observe(){
+        cancellable = subject.sink { [weak self] in
             self?.complete($0)
         } receiveValue: { [weak self] action in
-            
-            print("observe action:", action)
-
+            // 発行されたactionに対する副作用があれば、逐次実行する
             self?.effects.filter { $0.action?.isEqualTo(action) == true }.forEach({ effect in
                 self?.execute(effect)
             })
-        }.store(in: &self.cancellables)
-    }
-    
-    func execute(_ effect: SagaEffect<Any>) {
-        print("execute effect:", effect)
-        if effect.pattern == .takeEvery, let saga = effect.saga{
-            Task.detached{
-                let _ = await saga(effect.action)
-            }
-        }
-        if effect.pattern == .takeLatest, let saga = effect.saga{
-            print("currentTasks[effect.identifier]", currentTasks[effect.identifier])
-            currentTasks[effect.identifier]?.cancel()
-            self.currentTasks[effect.identifier] = nil
-            currentTasks[effect.identifier] = Task.detached{
-                let _ = await saga(effect.action)
-                print("taleLatest done")
-                self.currentTasks[effect.identifier]?.cancel()
-                self.currentTasks[effect.identifier] = nil
-            }
-        }
-        if effect.pattern == .takeLeading, let saga = effect.saga{
-            if(self.currentTasks[effect.identifier] != nil){
-                return
-            }
-            currentTasks[effect.identifier] = Task.detached{
-                let _ = await saga(effect.action)
-                self.currentTasks[effect.identifier]?.cancel()
-                self.currentTasks[effect.identifier] = nil
-            }
         }
     }
-    
-    
     
     /**
-     特定の action を監視して、イベントを実行する
+     副作用をそれぞれのタイミングで実行する
+     */
+    private func execute(_ effect: SagaEffect<Any>) {
+        print("execute effect:", effect)
+        
+        switch effect.pattern {
+        case .takeEvery:
+            if let saga = effect.saga{
+                Task.detached{
+                    let _ = await saga(effect.action)
+                }
+            }
+            
+        case .takeLatest:
+            if let saga = effect.saga{
+                currentTasks[effect.identifier]?.cancel()
+                currentTasks[effect.identifier] = nil
+                currentTasks[effect.identifier] = Task.detached{
+                    let _ = await saga(effect.action)
+                    self.currentTasks[effect.identifier]?.cancel()
+                    self.currentTasks[effect.identifier] = nil
+                }
+            }
+            
+        case .takeLeading:
+            if let saga = effect.saga{
+                if self.currentTasks[effect.identifier] != nil {
+                    return
+                }
+                currentTasks[effect.identifier] = Task.detached{
+                    let _ = await saga(effect.action)
+                    self.currentTasks[effect.identifier]?.cancel()
+                    self.currentTasks[effect.identifier] = nil
+                }
+            }
+            
+        default:
+            break
+        }
+        
+    }
+    
+    /**
+     特定の action を監視して、イベントを実行する。主に take 向け。
      */
     func match(_ action: any SagaAction, receive: @escaping (_ action: any SagaAction) -> Void ){
-        print("match action:", action)
-        
-    // 一度限りの監視を実現する。これがないと、withCheckedContinuationでクラッシュする
+        // 監視は一度限りで行い、検出後は破棄する
+        // 破棄しないと、検出した action を対応にした場合、withCheckedContinuation で二重呼び出しにカウントされクラッシュする
         var cancellable: AnyCancellable? = nil
         
         cancellable =  subject.filter {
-            print("match filter $0:", $0, "action:", action)
-            return $0.isEqualTo(action)
+            $0.isEqualTo(action)
         }.sink { [weak self] in
             self?.complete($0)
-        } receiveValue: { [weak self] in
-            // プロトコルでは直接比較(==)できないための回避
-            if $0.isEqualTo(action){
-                receive(action)
-            }
             cancellable?.cancel()
-            print("match $0:", $0, "action:", action, "receiveValue/cancellables:", self?.cancellables.count)
-        } //.store(in: &cancellables)
-        
-        print("match action:", action, "cancellables:", cancellables.count)
+        } receiveValue: {
+            receive($0)
+            cancellable?.cancel()
+        }
     }
     
     func cancel() {
-        cancellables.forEach { $0.cancel() }
+        effects.removeAll()
+        cancellable?.cancel()
         currentTasks.values.forEach { $0.cancel() }
     }
     
@@ -166,7 +172,7 @@ final class SagaProvider {
      エラー時の処理
      @TODO: エラーを投げるかは検討
      */
-    func complete(_ completion: Subscribers.Completion<Error>){
+    private func complete(_ completion: Subscribers.Completion<Error>){
         switch completion {
         case .finished:
             print("SagaProvider#finished")

@@ -19,8 +19,10 @@ func makeAppStore() -> Store<AppState> {
     )
 
     // これは初回設定sagaみたいな処理にする。ここは仮に置いている
-    call(counterSaga)
-
+    Task {
+        await call(counterSaga)
+    }
+    
     return store
 }
 
