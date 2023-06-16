@@ -108,8 +108,6 @@ final class SagaMonitor {
      副作用をそれぞれのタイミングで実行する
      */
     private func execute(_ effect: SagaEffect<Any>) {
-        print("execute effect:", effect)
-        
         switch effect.pattern {
         case .takeEvery:
             if let saga = effect.saga{
