@@ -26,18 +26,19 @@ final class CounterViewModel: ObservableObject, StoreSubscriber {
     }
     
     public func increase() {
-        appStore.dispatch(CounterAction.increase)
+        appStore.dispatch(Increase())
+//        appStore.dispatch(BBB(userID: "1234"))
     }
     
     public func decrease() {
-        appStore.dispatch(CounterAction.decrease)
+     //   appStore.dispatch(CounterAction.decrease)
     }
     
     public func move(count: Int) {
-        appStore.dispatch(CounterAction.move(count: count))
+        appStore.dispatch(Move(count: count))
     }
 
     public func clear() {
-        appStore.dispatch(CounterAction.clear)
+//appStore.dispatch(CounterAction.clear)
     }
 }

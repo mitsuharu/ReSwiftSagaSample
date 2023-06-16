@@ -20,6 +20,9 @@ struct CounterView: View {
                 Button("decrease") {
                     viewModel.decrease()
                 }
+                Button("move") {
+                    viewModel.move(count: 100)
+                }
                 Button("clear") {
                     viewModel.clear()
                 }

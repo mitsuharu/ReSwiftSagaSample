@@ -8,9 +8,19 @@
 import Foundation
 import ReSwift
 
-enum CounterAction: SagaAction {
-    case increase
-    case decrease
-    case move(count: Int)
-    case clear
+protocol CounterAction: Action {}
+
+struct Increase: CounterAction {}
+struct decrease: CounterAction {}
+struct Move: CounterAction {
+    let count: Int
 }
+struct clear: CounterAction {}
+
+
+//enum CounterAction: SagaAction {
+//    case increase
+//    case decrease
+//    case move(count: Int)
+//    case clear
+//}

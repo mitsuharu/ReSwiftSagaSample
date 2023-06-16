@@ -11,9 +11,7 @@ func createSagaMiddleware<State>() -> Middleware<State> {
     return { dispatch, getState in
         return { next in
             return { action in
-                if let action = action as? (any SagaAction) {
-                    SagaMonitor.shared.send(action)
-                }
+                sagaMonitor.send(action)
                 return next(action)
             }
         }

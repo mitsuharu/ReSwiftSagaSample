@@ -25,6 +25,11 @@
 		9B3E0E5B28E84B6900964B21 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5A28E84B6900964B21 /* CounterView.swift */; };
 		9B3E0E5E28E84BC900964B21 /* CounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */; };
 		9B49A5C62A3C7DC70095129A /* SagaMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */; };
+		9B9D926B2A3C80BA004B2105 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D926A2A3C80BA004B2105 /* UserState.swift */; };
+		9B9D926D2A3C80F0004B2105 /* UserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D926C2A3C80F0004B2105 /* UserReducer.swift */; };
+		9B9D926F2A3C8104004B2105 /* UserSelectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D926E2A3C8104004B2105 /* UserSelectors.swift */; };
+		9B9D92712A3C8112004B2105 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D92702A3C8112004B2105 /* UserAction.swift */; };
+		9B9D92732A3C811C004B2105 /* UserSaga.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D92722A3C811C004B2105 /* UserSaga.swift */; };
 		BC0369232A25C49500FB140E /* SagaEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0369222A25C49500FB140E /* SagaEffect.swift */; };
 		BC0369252A25DA5E00FB140E /* Saga.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0369242A25DA5E00FB140E /* Saga.swift */; };
 		BC06E2042A2AD82600650BEA /* CounterSaga.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06E2032A2AD82600650BEA /* CounterSaga.swift */; };
@@ -68,6 +73,11 @@
 		9B3E0E5A28E84B6900964B21 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterViewModel.swift; sourceTree = "<group>"; };
 		9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SagaMonitor.swift; sourceTree = "<group>"; };
+		9B9D926A2A3C80BA004B2105 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
+		9B9D926C2A3C80F0004B2105 /* UserReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReducer.swift; sourceTree = "<group>"; };
+		9B9D926E2A3C8104004B2105 /* UserSelectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSelectors.swift; sourceTree = "<group>"; };
+		9B9D92702A3C8112004B2105 /* UserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
+		9B9D92722A3C811C004B2105 /* UserSaga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSaga.swift; sourceTree = "<group>"; };
 		BC0369222A25C49500FB140E /* SagaEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SagaEffect.swift; sourceTree = "<group>"; };
 		BC0369242A25DA5E00FB140E /* Saga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Saga.swift; sourceTree = "<group>"; };
 		BC06E2032A2AD82600650BEA /* CounterSaga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterSaga.swift; sourceTree = "<group>"; };
@@ -172,6 +182,7 @@
 		9B3E0E3428E8414400964B21 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				9B9D92692A3C80A3004B2105 /* User */,
 				9B3E0E4A28E8416300964B21 /* Counter */,
 			);
 			path = modules;
@@ -220,6 +231,18 @@
 				9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		9B9D92692A3C80A3004B2105 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				9B9D926A2A3C80BA004B2105 /* UserState.swift */,
+				9B9D926C2A3C80F0004B2105 /* UserReducer.swift */,
+				9B9D926E2A3C8104004B2105 /* UserSelectors.swift */,
+				9B9D92702A3C8112004B2105 /* UserAction.swift */,
+				9B9D92722A3C811C004B2105 /* UserSaga.swift */,
+			);
+			path = User;
 			sourceTree = "<group>";
 		};
 		BC0369212A25C47700FB140E /* redux-saga */ = {
@@ -371,16 +394,21 @@
 				9B3E0E4E28E8418A00964B21 /* CounterReducer.swift in Sources */,
 				9B3E0E3F28E8414400964B21 /* AppState.swift in Sources */,
 				9B3E0E5E28E84BC900964B21 /* CounterViewModel.swift in Sources */,
+				9B9D92712A3C8112004B2105 /* UserAction.swift in Sources */,
 				9B3E0E5028E8419A00964B21 /* CounterSelectors.swift in Sources */,
 				BC06E2042A2AD82600650BEA /* CounterSaga.swift in Sources */,
 				BC0369232A25C49500FB140E /* SagaEffect.swift in Sources */,
+				9B9D926D2A3C80F0004B2105 /* UserReducer.swift in Sources */,
 				9B3E0E4128E8414400964B21 /* AppStore.swift in Sources */,
+				9B9D926B2A3C80BA004B2105 /* UserState.swift in Sources */,
 				9B3E0E5628E84B1300964B21 /* RootView.swift in Sources */,
 				BC0369252A25DA5E00FB140E /* Saga.swift in Sources */,
 				9B3E0E5228E841AD00964B21 /* CounterAction.swift in Sources */,
 				9B3E0E5B28E84B6900964B21 /* CounterView.swift in Sources */,
 				9B3E0E4028E8414400964B21 /* AppReducer.swift in Sources */,
+				9B9D926F2A3C8104004B2105 /* UserSelectors.swift in Sources */,
 				9B3E0E0428E5B5B700964B21 /* ReSwiftSagaSampleApp.swift in Sources */,
+				9B9D92732A3C811C004B2105 /* UserSaga.swift in Sources */,
 				9B49A5C62A3C7DC70095129A /* SagaMonitor.swift in Sources */,
 				9B3E0E4C28E8417B00964B21 /* CounterState.swift in Sources */,
 			);

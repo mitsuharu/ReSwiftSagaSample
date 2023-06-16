@@ -8,18 +8,25 @@
 import Foundation
 import ReSwift
 
-let counterSaga: Saga = { (_ action: Action?) in
+let counterSaga: Saga<Action, Void> = { action  in
     
-//    takeEvery(CounterAction.increase, effect: increaseSaga)
-//    
-//    takeEvery(CounterAction.clear, effect: increaseSaga)
     
-//    SagaMonitor.shared.takeEvery(CounterAction.increase, effect: increaseSaga2)
-    
+//    do{
+//        try await Task.sleep(nanoseconds: UInt64(1) * 1_000_000_000)
+//    }catch{
+//
+//    }
 
-    takeLatest(CounterAction.increase, saga: increaseSaga)
-//    takeLatest(CounterAction.increase, effect: increaseSaga2)
+    takeEvery(Increase.self, saga: increaseSaga)
+    takeEvery(Move.self, saga: moveSaga)
+    
+//
+//    return 0
+ 
+
 }
+
+
 
 let increaseSaga: Saga = { (_ action: Action?) async in
     print("increaseSaga", action ?? "", "start")
@@ -29,9 +36,10 @@ let increaseSaga: Saga = { (_ action: Action?) async in
     }
     print("increaseSaga", action ?? "", "end")
     
-    
-    let aaaa = await take(CounterAction.decrease as (any SagaAction))
-    print("increaseSaga take:", aaaa )
+
+//
+//    let aaaa = await take(CounterAction.decrease as (any SagaAction))
+//    print("increaseSaga take:", aaaa )
 }
 
 let increaseSaga2: Saga = { (_ action: Action?) in
@@ -42,3 +50,17 @@ let increaseSaga2: Saga = { (_ action: Action?) in
     print("increaseSaga2", action ?? "")
     
 }
+
+let moveSaga: Saga = { (_ action: Action?) in
+    
+  
+    if let aaa = action as? Move {
+        print("moveSaga move", aaa.count)
+    }
+    
+
+    
+    print("moveSaga", action ?? "", action.self ?? "")
+    
+}
+

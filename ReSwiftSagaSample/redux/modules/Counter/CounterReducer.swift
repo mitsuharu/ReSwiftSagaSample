@@ -7,20 +7,24 @@
 
 import Foundation
 
-func counterReducer(action: CounterAction, state: CounterState) -> CounterState {
+func counterReducer(action: any CounterAction, state: CounterState) -> CounterState {
     
     switch action {
-    case .increase:
+    case _ as Increase:
         return CounterState(count: state.count + 1)
+//    case .increase:
+//        return CounterState(count: state.count + 1)
 
-    case .decrease:
-        return CounterState(count: state.count - 1)
-        
-    case .move(count: let count):
-        return CounterState(count: count)
-    
-    case .clear:
-        return CounterState.initialState()
+//    case .decrease:
+//        return CounterState(count: state.count - 1)
+//
+//    case .move(count: let count):
+//        return CounterState(count: count)
+//
+//    case .clear:
+//        return CounterState.initialState()
 
+    default:
+        return state
     }
 }
