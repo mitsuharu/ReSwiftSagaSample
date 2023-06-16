@@ -52,11 +52,12 @@ let increaseSaga2: Saga = { (_ action: Action?) in
 }
 
 let moveSaga: Saga = { (_ action: Action?) in
-    
   
-    if let aaa = action as? Move {
-        print("moveSaga move", aaa.count)
+    guard let move = action as? Move else {
+        return
     }
+  
+    print("moveSaga move", move, move.count)
     
 
     
