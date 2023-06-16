@@ -14,7 +14,7 @@ let counterSaga: Saga = { (_ action: Action?) in
 //    
 //    takeEvery(CounterAction.clear, effect: increaseSaga)
     
-//    SagaProvider.shared.takeEvery(CounterAction.increase, effect: increaseSaga2)
+//    SagaMonitor.shared.takeEvery(CounterAction.increase, effect: increaseSaga2)
     
 
     takeLatest(CounterAction.increase, saga: increaseSaga)

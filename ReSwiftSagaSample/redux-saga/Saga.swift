@@ -58,10 +58,10 @@ struct SagaEffect<T>: Hashable {
     let saga: Saga<T>?
 }
 
-// Provider
-final class SagaProvider {
+// SagaMonitor
+final class SagaMonitor {
     
-    public static let shared = SagaProvider()
+    public static let shared = SagaMonitor()
     
     private let subject = PassthroughSubject<any SagaAction, Error>()
     private var effects = Set<SagaEffect<Any>>()
@@ -175,9 +175,9 @@ final class SagaProvider {
     private func complete(_ completion: Subscribers.Completion<Error>){
         switch completion {
         case .finished:
-            print("SagaProvider#finished")
+            print("SagaMonitor#finished")
         case .failure(let error):
-            assertionFailure("SagaProvider#failure \(error)")
+            assertionFailure("SagaMonitor#failure \(error)")
         }
     }
 }
@@ -187,7 +187,7 @@ func createSagaMiddleware<State>() -> Middleware<State> {
         return { next in
             return { action in
                 if let action = action as? (any SagaAction) {
-                    SagaProvider.shared.send(action)
+                    SagaMonitor.shared.send(action)
                 }
                 return next(action)
             }
