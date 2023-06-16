@@ -24,6 +24,7 @@
 		9B3E0E5628E84B1300964B21 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5528E84B1300964B21 /* RootView.swift */; };
 		9B3E0E5B28E84B6900964B21 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5A28E84B6900964B21 /* CounterView.swift */; };
 		9B3E0E5E28E84BC900964B21 /* CounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */; };
+		9B49A5C62A3C7DC70095129A /* SagaMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */; };
 		BC0369232A25C49500FB140E /* SagaEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0369222A25C49500FB140E /* SagaEffect.swift */; };
 		BC0369252A25DA5E00FB140E /* Saga.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0369242A25DA5E00FB140E /* Saga.swift */; };
 		BC06E2042A2AD82600650BEA /* CounterSaga.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06E2032A2AD82600650BEA /* CounterSaga.swift */; };
@@ -66,6 +67,7 @@
 		9B3E0E5528E84B1300964B21 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		9B3E0E5A28E84B6900964B21 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterViewModel.swift; sourceTree = "<group>"; };
+		9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SagaMonitor.swift; sourceTree = "<group>"; };
 		BC0369222A25C49500FB140E /* SagaEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SagaEffect.swift; sourceTree = "<group>"; };
 		BC0369242A25DA5E00FB140E /* Saga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Saga.swift; sourceTree = "<group>"; };
 		BC06E2032A2AD82600650BEA /* CounterSaga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterSaga.swift; sourceTree = "<group>"; };
@@ -223,8 +225,9 @@
 		BC0369212A25C47700FB140E /* redux-saga */ = {
 			isa = PBXGroup;
 			children = (
-				BC0369222A25C49500FB140E /* SagaEffect.swift */,
 				BC0369242A25DA5E00FB140E /* Saga.swift */,
+				BC0369222A25C49500FB140E /* SagaEffect.swift */,
+				9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */,
 			);
 			path = "redux-saga";
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				9B3E0E5B28E84B6900964B21 /* CounterView.swift in Sources */,
 				9B3E0E4028E8414400964B21 /* AppReducer.swift in Sources */,
 				9B3E0E0428E5B5B700964B21 /* ReSwiftSagaSampleApp.swift in Sources */,
+				9B49A5C62A3C7DC70095129A /* SagaMonitor.swift in Sources */,
 				9B3E0E4C28E8417B00964B21 /* CounterState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
