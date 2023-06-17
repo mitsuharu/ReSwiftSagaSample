@@ -13,8 +13,8 @@ func appReducer(action: Action, state: AppState?) -> AppState {
     let state = state ?? AppState.initialState()
 
     var nextCounter = state.counter
-    if action is (any CounterAction) {
-        nextCounter = counterReducer(action: action as! (any CounterAction),
+    if action is CounterAction {
+        nextCounter = counterReducer(action: action as! CounterAction,
                                      state: state.counter)
     }
     

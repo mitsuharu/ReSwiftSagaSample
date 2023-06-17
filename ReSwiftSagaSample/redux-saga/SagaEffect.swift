@@ -8,47 +8,54 @@
 import ReSwift
 import Combine
 
-func put(_ action: any Action){
-    sagaMonitor.send(action)
+func put(_ action: SagaAction){
+    SagaMonitor.shared.send(action)
 }
 
-func call<T, K>(_ effect: @escaping Saga<T, K>, _ arg: T) async ->K{
+@discardableResult
+func call(_ effect: @escaping Saga<SagaAction, Any>, _ arg: SagaAction) async -> Any {
     return await effect(arg)
 }
 
-func call<T, K>(_ effect: @escaping Saga<T, K>) async -> K{
-    let action = ActionStruct()
-    return await effect(action as! T)
+@discardableResult
+func call(_ effect: @escaping Saga<SagaAction, Any>) async -> Any {
+    let action = SagaAction()
+    return await effect(action)
 }
 
-//func fork<T>(_ effect: @escaping Saga<T>, _ arg: ( any Action)? = nil){
-//    Task.detached {
-//        await effect(arg)
-//    }
-//}
+func fork(_ effect: @escaping Saga<SagaAction, Any>, _ arg: SagaAction) async -> Void {
+    Task.detached{
+        let _ = await effect(arg)
+    }
+}
 
-func take(_ action: any Action) async -> any Action {
+func fork(_ effect: @escaping Saga<SagaAction, Any>) async -> Void {
+    Task.detached{
+        let action = SagaAction()
+        let _ = await effect(action)
+    }
+}
+
+@discardableResult
+func take(_ actionType: SagaAction.Type) async -> SagaAction {
     return await withCheckedContinuation { continuation in
-        sagaMonitor.match(action) { action in
+        SagaMonitor.shared.match(actionType) { action in
             continuation.resume(returning: action)
         }
     }
 }
 
-func takeEvery( _ action: Action.Type, saga: @escaping Saga<any Action, Any>)  {
-    
-    print("takeEvery, action:", action, "saga:", saga)
-    
+func takeEvery( _ action: SagaAction.Type, saga: @escaping Saga<SagaAction, Any>)  {
     let effect = SagaEffect(pattern: .takeEvery, type: action.self, saga: saga)
-    sagaMonitor.addEffect(effect)
+    SagaMonitor.shared.addEffect(effect)
 }
 
+func takeLatest( _ action: SagaAction.Type, saga: @escaping Saga<SagaAction, Any>)  {
+    let effect = SagaEffect(pattern: .takeLatest, type: action.self, saga: saga)
+    SagaMonitor.shared.addEffect(effect)
+}
 
-//func takeLatest<T>( _ action:  any Action, saga: @escaping Saga<T>)  {
-//
-//  //  SagaMonitor.shared.addEffect(SagaEffect(pattern: .takeLatest, action: action, saga: saga))
-//}
-//
-//func takeLeading<T>( _ action:  any Action, saga: @escaping Saga<T>)  {
-//  //  SagaMonitor.shared.addEffect(SagaEffect(pattern: .takeLeading, action: action, saga: saga))
-//}
+func takeLeading( _ action: SagaAction.Type, saga: @escaping Saga<SagaAction, Any>)  {
+    let effect = SagaEffect(pattern: .takeLeading, type: action.self, saga: saga)
+    SagaMonitor.shared.addEffect(effect)
+}

@@ -7,7 +7,7 @@
 
 import Foundation
 
-func counterReducer(action: any CounterAction, state: CounterState) -> CounterState {
+func counterReducer(action: CounterAction, state: CounterState) -> CounterState {
     
     switch action {
     case _ as Increase:

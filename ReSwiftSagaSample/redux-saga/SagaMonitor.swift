@@ -10,14 +10,17 @@ import ReSwift
 import Combine
 
 /**
+ Action のクラス
+ 一般的に enum や struct が使われることが多いが、
+ Actionのmoduleごとのグルーピングや、継承を利用するためにclassを利用する
+ */
+class SagaAction: Action {
+}
+
+/**
  Sagaで実行する関数の型
  */
-//typealias Saga<T> = ((any Action)?) async -> T
-
-typealias Saga<T, K> = (T) async -> K
-
-
-struct ActionStruct: Action {}
+typealias Saga<T: SagaAction, K> = (T) async -> K
 
 /**
  構造体 SagaEffect でサポートする副作用
@@ -29,7 +32,7 @@ enum SagaPattern {
     case takeLatest
 }
 
-struct SagaEffect<T, K>: Hashable {
+struct SagaEffect<T: SagaAction, K>: Hashable {
     
     let identifier = UUID().uuidString
         
@@ -42,7 +45,7 @@ struct SagaEffect<T, K>: Hashable {
     }
     
     let pattern: SagaPattern
-    let type: any Action.Type
+    let type: T.Type
     let saga: Saga<T, K>
 }
 
@@ -51,12 +54,12 @@ struct SagaEffect<T, K>: Hashable {
  - 中核となるクラス
  - 発行された Action の監視して、それぞれのルールに従って処理を行う
  */
-final class SagaMonitor<T, K> {
+final class SagaMonitor {
     
-    // public static let shared = SagaMonitor<Action, Void>()
+    public static let shared = SagaMonitor()
     
-    private let subject = PassthroughSubject<T, Error>()
-    private var effects = Set<SagaEffect<T, K>>()
+    private let subject = PassthroughSubject<SagaAction, Error>()
+    private var effects = Set<SagaEffect<SagaAction, Any>>()
     private var cancellable: AnyCancellable? = nil
     private var currentTasks = [String:Task<(), Never>]()
 
@@ -67,14 +70,14 @@ final class SagaMonitor<T, K> {
     /**
      action を発行する
      */
-    func send(_ action: T){
+    func send(_ action: SagaAction){
         subject.send(action)
     }
     
     /**
      takeEveryなどの副作用を記録する
      */
-    func addEffect(_ effect:SagaEffect<T, K>){
+    func addEffect(_ effect:SagaEffect<SagaAction, Any>){
         effects.insert(effect)
     }
     
@@ -85,14 +88,6 @@ final class SagaMonitor<T, K> {
         cancellable = subject.sink { [weak self] in
             self?.complete($0)
         } receiveValue: { [weak self] action in
-            
-            print("observe", action, action.self)
-        
-            self?.effects.forEach {
-                print("observe $0.type:", $0.type, "type(of: action):", type(of: action), $0.type == type(of: action))
-      
-                
-            }
             // 発行されたactionに対する副作用があれば、逐次実行する
              self?.effects.filter { $0.type == type(of: action) }.forEach({ effect in
                  self?.execute(effect, action: action)
@@ -103,38 +98,33 @@ final class SagaMonitor<T, K> {
     /**
      副作用をそれぞれのタイミングで実行する
      */
-    private func execute(_ effect: SagaEffect<T, K>, action: T) {
+    private func execute(_ effect: SagaEffect<SagaAction, Any>, action: SagaAction) {
         print("execute pattern:", effect.pattern, "action:", action)
         
         switch effect.pattern {
         case .takeEvery:
-            print("execute pattern:", effect.pattern, "action:", action  )
             Task.detached{
                 let _ = await effect.saga(action)
             }
             
-//        case .takeLatest:
-//            if let saga = effect.saga{
-//                currentTasks[effect.identifier]?.cancel()
-//                currentTasks[effect.identifier] = nil
-//                currentTasks[effect.identifier] = Task.detached{
-//                    let _ = await saga(effect.action)
-//                    self.currentTasks[effect.identifier]?.cancel()
-//                    self.currentTasks[effect.identifier] = nil
-//                }
-//            }
-//
-//        case .takeLeading:
-//            if let saga = effect.saga{
-//                if self.currentTasks[effect.identifier] != nil {
-//                    return
-//                }
-//                currentTasks[effect.identifier] = Task.detached{
-//                    let _ = await saga(effect.action)
-//                    self.currentTasks[effect.identifier]?.cancel()
-//                    self.currentTasks[effect.identifier] = nil
-//                }
-//            }
+        case .takeLatest:
+            currentTasks[effect.identifier]?.cancel()
+            currentTasks[effect.identifier] = nil
+            currentTasks[effect.identifier] = Task.detached{
+                let _ = await effect.saga(action)
+                self.currentTasks[effect.identifier]?.cancel()
+                self.currentTasks[effect.identifier] = nil
+            }
+
+        case .takeLeading:
+            if self.currentTasks[effect.identifier] != nil {
+                return
+            }
+            currentTasks[effect.identifier] = Task.detached{
+                let _ = await effect.saga(action)
+                self.currentTasks[effect.identifier]?.cancel()
+                self.currentTasks[effect.identifier] = nil
+            }
             
         default:
             break
@@ -145,20 +135,20 @@ final class SagaMonitor<T, K> {
     /**
      特定の action を監視して、イベントを実行する。主に take 向け。
      */
-    func match(_ action:  any Action, receive: @escaping (_ action:  any Action) -> Void ){
+    func match(_ actionType: SagaAction.Type, receive: @escaping (_ action: SagaAction) -> Void ){
         // 監視は一度限りで行い、検出後は破棄する
         // 破棄しないと、検出した action を対応にした場合、withCheckedContinuation で二重呼び出しにカウントされクラッシュする
-//        var cancellable: AnyCancellable? = nil
-//
-//        cancellable =  subject.filter {
-//            $0.isEqualTo(action)
-//        }.sink { [weak self] in
-//            self?.complete($0)
-//            cancellable?.cancel()
-//        } receiveValue: {
-//            receive($0)
-//            cancellable?.cancel()
-//        }
+        var cancellable: AnyCancellable? = nil
+
+        cancellable =  subject.filter {
+            type(of: $0) == actionType
+        }.sink { [weak self] in
+            self?.complete($0)
+            cancellable?.cancel()
+        } receiveValue: {
+            receive($0)
+            cancellable?.cancel()
+        }
     }
     
     func cancel() {

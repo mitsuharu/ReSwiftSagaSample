@@ -7,13 +7,13 @@
 
 import ReSwift
 
-let sagaMonitor = SagaMonitor<any Action, Any>()
-
 func createSagaMiddleware<State>() -> Middleware<State> {
     return { dispatch, getState in
         return { next in
             return { action in
-                sagaMonitor.send(action)
+                if let action = action as? SagaAction {
+                    SagaMonitor.shared.send(action)
+                }
                 return next(action)
             }
         }
