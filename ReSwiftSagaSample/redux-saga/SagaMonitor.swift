@@ -12,7 +12,7 @@ import Combine
 /**
  Action のクラス
  一般的に enum や struct が使われることが多いが、
- Actionのmoduleごとのグルーピングや、継承を利用するためにclassを利用する
+ Actionのmoduleごとのグルーピングなどに継承を利用するためにclassを利用する
  */
 class SagaAction: Action {
 }
@@ -20,7 +20,7 @@ class SagaAction: Action {
 /**
  Sagaで実行する関数の型
  */
-typealias Saga<T: SagaAction, K> = (T) async -> K
+typealias Saga<T> = (SagaAction) async -> T
 
 /**
  構造体 SagaEffect でサポートする副作用
@@ -32,7 +32,7 @@ enum SagaPattern {
     case takeLatest
 }
 
-struct SagaEffect<T: SagaAction, K>: Hashable {
+struct SagaEffect<T>: Hashable {
     
     let identifier = UUID().uuidString
         
@@ -40,13 +40,13 @@ struct SagaEffect<T: SagaAction, K>: Hashable {
         return hasher.combine(identifier)
     }
     
-    static func == (lhs: SagaEffect<T, K>, rhs: SagaEffect<T, K>) -> Bool {
+    static func == (lhs: SagaEffect<T>, rhs: SagaEffect<T>) -> Bool {
         return lhs.identifier == rhs.identifier
     }
     
     let pattern: SagaPattern
-    let type: T.Type
-    let saga: Saga<T, K>
+    let type: SagaAction.Type
+    let saga: Saga<T>
 }
 
 /**
@@ -59,7 +59,7 @@ final class SagaMonitor {
     public static let shared = SagaMonitor()
     
     private let subject = PassthroughSubject<SagaAction, Error>()
-    private var effects = Set<SagaEffect<SagaAction, Any>>()
+    private var effects = Set<SagaEffect<Any>>()
     private var cancellable: AnyCancellable? = nil
     private var currentTasks = [String:Task<(), Never>]()
 
@@ -77,7 +77,7 @@ final class SagaMonitor {
     /**
      takeEveryなどの副作用を記録する
      */
-    func addEffect(_ effect:SagaEffect<SagaAction, Any>){
+    func addEffect(_ effect:SagaEffect<Any>){
         effects.insert(effect)
     }
     
@@ -98,7 +98,7 @@ final class SagaMonitor {
     /**
      副作用をそれぞれのタイミングで実行する
      */
-    private func execute(_ effect: SagaEffect<SagaAction, Any>, action: SagaAction) {
+    private func execute(_ effect: SagaEffect<Any>, action: SagaAction) {
         print("execute pattern:", effect.pattern, "action:", action)
         
         switch effect.pattern {
@@ -129,7 +129,6 @@ final class SagaMonitor {
         default:
             break
         }
-        
     }
     
     /**
