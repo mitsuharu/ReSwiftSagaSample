@@ -23,7 +23,7 @@ class SagaAction: Action {
 typealias Saga<T> = (SagaAction) async -> T
 
 /**
- 構造体 SagaEffect でサポートする副作用
+ 構造体 SagaStore でサポートする副作用
  */
 enum SagaPattern {
     case take
@@ -32,7 +32,7 @@ enum SagaPattern {
     case takeLatest
 }
 
-struct SagaEffect<T>: Hashable {
+struct SagaStore<T>: Hashable {
     
     let identifier = UUID().uuidString
         
@@ -40,7 +40,7 @@ struct SagaEffect<T>: Hashable {
         return hasher.combine(identifier)
     }
     
-    static func == (lhs: SagaEffect<T>, rhs: SagaEffect<T>) -> Bool {
+    static func == (lhs: SagaStore<T>, rhs: SagaStore<T>) -> Bool {
         return lhs.identifier == rhs.identifier
     }
     
@@ -59,7 +59,7 @@ final class SagaMonitor {
     public static let shared = SagaMonitor()
     
     private let subject = PassthroughSubject<SagaAction, Error>()
-    private var effects = Set<SagaEffect<Any>>()
+    private var stores = Set<SagaStore<Any>>()
     private var cancellable: AnyCancellable? = nil
     private var currentTasks = [String:Task<(), Never>]()
 
@@ -77,8 +77,8 @@ final class SagaMonitor {
     /**
      takeEveryなどの副作用を記録する
      */
-    func addEffect(_ effect:SagaEffect<Any>){
-        effects.insert(effect)
+    func addStore(_ store:SagaStore<Any>){
+        stores.insert(store)
     }
     
     /**
@@ -89,7 +89,7 @@ final class SagaMonitor {
             self?.complete($0)
         } receiveValue: { [weak self] action in
             // 発行されたactionに対する副作用があれば、逐次実行する
-             self?.effects.filter { $0.type == type(of: action) }.forEach({ effect in
+             self?.stores.filter { $0.type == type(of: action) }.forEach({ effect in
                  self?.execute(effect, action: action)
             })
         }
@@ -98,7 +98,7 @@ final class SagaMonitor {
     /**
      副作用をそれぞれのタイミングで実行する
      */
-    private func execute(_ effect: SagaEffect<Any>, action: SagaAction) {
+    private func execute(_ effect: SagaStore<Any>, action: SagaAction) {
         print("execute pattern:", effect.pattern, "action:", action)
         
         switch effect.pattern {
@@ -151,7 +151,7 @@ final class SagaMonitor {
     }
     
     func cancel() {
-        effects.removeAll()
+        stores.removeAll()
         cancellable?.cancel()
         currentTasks.values.forEach { $0.cancel() }
     }
