@@ -58,17 +58,17 @@ func take(_ actionType: SagaAction.Type) async -> SagaAction {
 }
 
 func takeEvery( _ action: SagaAction.Type, saga: @escaping Saga<Any>)  {
-    let effect = SagaEffect(pattern: .takeEvery, type: action.self, saga: saga)
-    SagaMonitor.shared.addEffect(effect)
+    let effect = SagaStore(pattern: .takeEvery, type: action.self, saga: saga)
+    SagaMonitor.shared.addStore(effect)
 }
 
 func takeLatest( _ action: SagaAction.Type, saga: @escaping Saga<Any>)  {
-    let effect = SagaEffect(pattern: .takeLatest, type: action.self, saga: saga)
-    SagaMonitor.shared.addEffect(effect)
+    let effect = SagaStore(pattern: .takeLatest, type: action.self, saga: saga)
+    SagaMonitor.shared.addStore(effect)
 }
 
 func takeLeading( _ action: SagaAction.Type, saga: @escaping Saga<Any>)  {
-    let effect = SagaEffect(pattern: .takeLeading, type: action.self, saga: saga)
-    SagaMonitor.shared.addEffect(effect)
+    let effect = SagaStore(pattern: .takeLeading, type: action.self, saga: saga)
+    SagaMonitor.shared.addStore(effect)
 }
 
