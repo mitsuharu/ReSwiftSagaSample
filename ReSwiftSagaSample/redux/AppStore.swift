@@ -21,7 +21,7 @@ func makeAppStore() -> Store<AppState> {
     // これは初回設定sagaみたいな処理にする。ここは仮に置いている
     Task {
         await call(counterSaga)
-//        await call(userSaga)
+        await call(userSaga)
     }
     
     return store
@@ -38,7 +38,9 @@ extension Store {
         if Thread.isMainThread {
             handler()
         } else {
-            DispatchQueue.main.async(execute: handler)
+            Task.detached { @MainActor in
+                handler()
+            }
         }
     }
 }

@@ -9,7 +9,9 @@ import Foundation
 
 func put(_ action: SagaAction) {
     if let dispatch = SagaMonitor.shared.dispatch {
-        dispatch(action)
+        Task.detached { @MainActor in
+            dispatch(action)
+        }
     }
 }
 

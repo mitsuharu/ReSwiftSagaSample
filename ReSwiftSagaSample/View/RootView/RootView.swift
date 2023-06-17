@@ -10,7 +10,7 @@ import SwiftUI
 struct RootView: View {
     var body: some View {
         NavigationView {
-            CounterView()
+            DemoView()
         }.navigationViewStyle(StackNavigationViewStyle())
     }
 }

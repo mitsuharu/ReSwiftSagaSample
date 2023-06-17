@@ -8,17 +8,7 @@
 import Foundation
 
 let userSaga: Saga = { _ in
-    
-//    takeEvery(CounterAction.increase, effect: increaseSaga)
-//
-//    takeEvery(CounterAction.clear, effect: increaseSaga)
-    
-//    SagaMonitor.shared.takeEvery(CounterAction.increase, effect: increaseSaga2)
-    
-
-    
-//    takeLatest(BBB.self as! (any SagaAction), saga: requestUserSaga)
-//    takeLatest(CounterAction.increase, effect: increaseSaga2)
+    takeEvery(RequestUser.self, saga: requestUserSaga)
 }
 
 let requestUserSaga: Saga = { action async in
@@ -26,20 +16,8 @@ let requestUserSaga: Saga = { action async in
         return
     }
     
-    print("requestUserSaga#start", action)
-    
-
     try? await Task.sleep(nanoseconds: 1_000_000_000)
     
-    
-    print("requestUserSaga#end", action)
-    
-//    Task{
-//        try? await Task.sleep(nanoseconds: 1_000_000_000)
-//    }
-//    print("increaseSaga", action ?? "", "end")
-//
-//
-//    let aaaa = await take(CounterAction.decrease as (any SagaAction))
-//    print("increaseSaga take:", aaaa )
+    let name = "dummy-user-" + String( Int.random(in: 0..<100))
+    put(StoreUserName(name: name))
 }
