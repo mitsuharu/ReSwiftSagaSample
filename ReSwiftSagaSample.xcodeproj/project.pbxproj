@@ -32,6 +32,7 @@
 		9B9D92732A3C811C004B2105 /* UserSaga.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D92722A3C811C004B2105 /* UserSaga.swift */; };
 		9B9D92752A3D74E8004B2105 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D92742A3D74E8004B2105 /* Effects.swift */; };
 		9B9D92772A3D7564004B2105 /* SagaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D92762A3D7564004B2105 /* SagaStore.swift */; };
+		9B9D92792A3D849A004B2105 /* SagaError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D92782A3D849A004B2105 /* SagaError.swift */; };
 		BC0369252A25DA5E00FB140E /* Saga.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0369242A25DA5E00FB140E /* Saga.swift */; };
 		BC06E2042A2AD82600650BEA /* CounterSaga.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06E2032A2AD82600650BEA /* CounterSaga.swift */; };
 /* End PBXBuildFile section */
@@ -81,6 +82,7 @@
 		9B9D92722A3C811C004B2105 /* UserSaga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSaga.swift; sourceTree = "<group>"; };
 		9B9D92742A3D74E8004B2105 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
 		9B9D92762A3D7564004B2105 /* SagaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SagaStore.swift; sourceTree = "<group>"; };
+		9B9D92782A3D849A004B2105 /* SagaError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SagaError.swift; sourceTree = "<group>"; };
 		BC0369242A25DA5E00FB140E /* Saga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Saga.swift; sourceTree = "<group>"; };
 		BC06E2032A2AD82600650BEA /* CounterSaga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterSaga.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -254,6 +256,7 @@
 				BC0369242A25DA5E00FB140E /* Saga.swift */,
 				9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */,
 				9B9D92762A3D7564004B2105 /* SagaStore.swift */,
+				9B9D92782A3D849A004B2105 /* SagaError.swift */,
 			);
 			path = "redux-saga";
 			sourceTree = "<group>";
@@ -408,6 +411,7 @@
 				BC0369252A25DA5E00FB140E /* Saga.swift in Sources */,
 				9B3E0E5228E841AD00964B21 /* CounterAction.swift in Sources */,
 				9B3E0E5B28E84B6900964B21 /* CounterView.swift in Sources */,
+				9B9D92792A3D849A004B2105 /* SagaError.swift in Sources */,
 				9B3E0E4028E8414400964B21 /* AppReducer.swift in Sources */,
 				9B9D926F2A3C8104004B2105 /* UserSelectors.swift in Sources */,
 				9B3E0E0428E5B5B700964B21 /* ReSwiftSagaSampleApp.swift in Sources */,

@@ -7,10 +7,10 @@
 
 import Foundation
 
-func selectUserId(store: AppState) -> String? {
-    store.user.userID
+func selectUserId(store: AppState) -> String {
+    store.user.userID ?? ""
 }
 
-func selectUserName(store: AppState) -> String? {
-    store.user.name
+func selectUserName(store: AppState) -> String {
+    store.user.name ?? ""
 }

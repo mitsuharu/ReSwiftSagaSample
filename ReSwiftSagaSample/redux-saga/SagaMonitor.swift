@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ReSwift
 
 /**
  SagaMonitor
@@ -16,6 +17,9 @@ import Combine
 final class SagaMonitor {
     
     public static let shared = SagaMonitor()
+    var dispatch: DispatchFunction? = nil
+    
+    var getState: (() -> Any?)? = nil
     
     private let subject = PassthroughSubject<SagaAction, Error>()
     private var stores = Set<SagaStore<Any>>()

@@ -7,8 +7,18 @@
 
 import Foundation
 
-func put(_ action: SagaAction){
-    SagaMonitor.shared.send(action)
+func put(_ action: SagaAction) {
+    if let dispatch = SagaMonitor.shared.dispatch {
+        dispatch(action)
+    }
+}
+
+func selector<State, T>(_ selector: (State) -> T) async throws -> T {
+    if let getState = SagaMonitor.shared.getState,
+       let state = getState() as? State  {
+      return selector(state)
+    }
+    throw SagaError.invalid
 }
 
 @discardableResult
@@ -44,17 +54,17 @@ func take(_ actionType: SagaAction.Type) async -> SagaAction {
     }
 }
 
-func takeEvery( _ action: SagaAction.Type, saga: @escaping Saga<Any>)  {
+func takeEvery( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
     let effect = SagaStore(pattern: .takeEvery, type: action.self, saga: saga)
     SagaMonitor.shared.addStore(effect)
 }
 
-func takeLatest( _ action: SagaAction.Type, saga: @escaping Saga<Any>)  {
+func takeLatest( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
     let effect = SagaStore(pattern: .takeLatest, type: action.self, saga: saga)
     SagaMonitor.shared.addStore(effect)
 }
 
-func takeLeading( _ action: SagaAction.Type, saga: @escaping Saga<Any>)  {
+func takeLeading( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
     let effect = SagaStore(pattern: .takeLeading, type: action.self, saga: saga)
     SagaMonitor.shared.addStore(effect)
 }

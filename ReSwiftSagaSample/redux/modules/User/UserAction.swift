@@ -6,15 +6,24 @@
 //
 
 import Foundation
-import ReSwift
 
-enum UserAction: Action {
-    case requestUser(userID: String)
-    case storeUserName(name: String)
-    case clear
-}
+class UserAction: SagaAction {}
 
-struct AAA: Action {}
-struct BBB: Action {
+class RequestUser: UserAction {
     let userID: String
+    init(userID: String) {
+        self.userID = userID
+    }
 }
+
+class StoreUserName: UserAction {
+    let name: String
+    init(name: String) {
+        self.name = name
+    }
+}
+
+class ClearUser: UserAction {
+    
+}
+

@@ -8,67 +8,46 @@
 import Foundation
 import ReSwift
 
-let counterSaga: Saga = { action  in
-    
-    
-//    do{
-//        try await Task.sleep(nanoseconds: UInt64(1) * 1_000_000_000)
-//    }catch{
-//
-//    }
-
+let counterSaga: Saga = { _ in
     takeEvery(Increase.self, saga: increaseSaga)
-//    takeEvery(Move.self, saga: moveSaga)
-    
-//
-//    return 0
- 
-
+    takeLatest(Decrease.self, saga: decreaseSaga)
+    takeEvery(Move.self, saga: moveSaga)
 }
 
-
-
-let increaseSaga: Saga = { action async in
-    
-
+private let increaseSaga: Saga = { action async in
     guard let action = action as? Increase else {
         return
     }
     
-    print("increaseSaga", action )
-    
-//    Task{
-//        try? await Task.sleep(nanoseconds: 1_000_000_000)
-//    }
-//    print("increaseSaga", action ?? "", "end")
+    print("increaseSaga#start", action )
     
 
-//
-    print("increaseSaga take: wait" )
-    let aaaa = await take(Decrease.self)
-    print("increaseSaga take:", aaaa )
+//    print("increaseSaga take: wait" )
+//    let decrease = await take(Decrease.self)
+//    print("increaseSaga take: ", action, "take:", decrease)
+    
+//    put(Move(count: 200))
+    
+ //   print("increaseSaga#end", action, "take:", decrease)
 }
 
-//let increaseSaga2: Saga = { (_ action: Action?) in
-//
-//    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//        print("1秒後の処理 increaseSaga2")
-//    }
-//    print("increaseSaga2", action ?? "")
-//
-//}
-//
-//let moveSaga: Saga = { (_ action: Action?) in
-//
-//    guard let move = action as? Move else {
-//        return
-//    }
-//
-//    print("moveSaga move", move, move.count)
-//
-//
-//
-//    print("moveSaga", action ?? "", action.self ?? "")
-//
-//}
-//
+private let decreaseSaga: Saga = { action async in
+    guard let action = action as? Decrease else {
+        return
+    }
+    print("decreaseSaga#start", action )
+
+    try? await Task.sleep(nanoseconds: 1_000_000_000)
+    print("decreaseSaga#end", action )
+
+}
+
+private let moveSaga: Saga = { (_ action: Action?) in
+    guard let move = action as? Move else {
+        return
+    }
+
+    print("moveSaga#start move", move, move.count)
+
+}
+
