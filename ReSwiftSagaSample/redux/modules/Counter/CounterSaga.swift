@@ -30,13 +30,12 @@ let counterSaga: Saga = { action  in
 
 let increaseSaga: Saga = { action async in
     
-    print("increaseSaga", action ?? "", "start")
-    
+
     guard let action = action as? Increase else {
         return
     }
     
-    print("increaseSaga", action ?? "", "start")
+    print("increaseSaga", action )
     
 //    Task{
 //        try? await Task.sleep(nanoseconds: 1_000_000_000)

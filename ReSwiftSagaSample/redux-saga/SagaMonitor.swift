@@ -6,48 +6,7 @@
 //
 
 import Foundation
-import ReSwift
 import Combine
-
-/**
- Action のクラス
- 一般的に enum や struct が使われることが多いが、
- Actionのmoduleごとのグルーピングなどに継承を利用するためにclassを利用する
- */
-class SagaAction: Action {
-}
-
-/**
- Sagaで実行する関数の型
- */
-typealias Saga<T> = (SagaAction) async -> T
-
-/**
- 構造体 SagaStore でサポートする副作用
- */
-enum SagaPattern {
-    case take
-    case takeEvery
-    case takeLeading
-    case takeLatest
-}
-
-struct SagaStore<T>: Hashable {
-    
-    let identifier = UUID().uuidString
-        
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(identifier)
-    }
-    
-    static func == (lhs: SagaStore<T>, rhs: SagaStore<T>) -> Bool {
-        return lhs.identifier == rhs.identifier
-    }
-    
-    let pattern: SagaPattern
-    let type: SagaAction.Type
-    let saga: Saga<T>
-}
 
 /**
  SagaMonitor
