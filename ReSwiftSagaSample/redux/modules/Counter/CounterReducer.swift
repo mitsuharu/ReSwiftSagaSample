@@ -12,17 +12,15 @@ func counterReducer(action: any CounterAction, state: CounterState) -> CounterSt
     switch action {
     case _ as Increase:
         return CounterState(count: state.count + 1)
-//    case .increase:
-//        return CounterState(count: state.count + 1)
-
-//    case .decrease:
-//        return CounterState(count: state.count - 1)
-//
-//    case .move(count: let count):
-//        return CounterState(count: count)
-//
-//    case .clear:
-//        return CounterState.initialState()
+    
+    case _ as Decrease:
+        return CounterState(count: state.count - 1)
+    
+    case let action as Move:
+        return CounterState(count: action.count)
+    
+    case _ as Clear:
+        return CounterState(count: 0)
 
     default:
         return state

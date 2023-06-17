@@ -11,16 +11,9 @@ import ReSwift
 protocol CounterAction: Action {}
 
 struct Increase: CounterAction {}
-struct decrease: CounterAction {}
+struct Decrease: CounterAction {}
 struct Move: CounterAction {
     let count: Int
 }
-struct clear: CounterAction {}
+struct Clear: CounterAction {}
 
-
-//enum CounterAction: SagaAction {
-//    case increase
-//    case decrease
-//    case move(count: Int)
-//    case clear
-//}
