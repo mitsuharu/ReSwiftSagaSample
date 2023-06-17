@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+let appStore = makeAppStore()
+
 @main
 struct ReSwiftSagaSampleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }
