@@ -14,7 +14,7 @@ import Combine
  */
 //typealias Saga<T> = ((any Action)?) async -> T
 
-typealias Saga<T, K> = (T?) async -> K
+typealias Saga<T, K> = (T) async -> K
 
 
 struct ActionStruct: Action {}
@@ -43,23 +43,19 @@ struct SagaEffect<T, K>: Hashable {
     
     let pattern: SagaPattern
     let type: any Action.Type
-    let saga: Saga<T, K>?
+    let saga: Saga<T, K>
 }
-
-
-public let sagaMonitor = SagaMonitor<any Action, Any>()
-
 
 /**
  SagaMonitor
  - 中核となるクラス
  - 発行された Action の監視して、それぞれのルールに従って処理を行う
  */
-public final class SagaMonitor<T, K> {
+final class SagaMonitor<T, K> {
     
     // public static let shared = SagaMonitor<Action, Void>()
     
-    private let subject = PassthroughSubject<any Action, Error>()
+    private let subject = PassthroughSubject<T, Error>()
     private var effects = Set<SagaEffect<T, K>>()
     private var cancellable: AnyCancellable? = nil
     private var currentTasks = [String:Task<(), Never>]()
@@ -71,7 +67,7 @@ public final class SagaMonitor<T, K> {
     /**
      action を発行する
      */
-    func send(_ action:  any Action){
+    func send(_ action: T){
         subject.send(action)
     }
     
@@ -107,16 +103,14 @@ public final class SagaMonitor<T, K> {
     /**
      副作用をそれぞれのタイミングで実行する
      */
-    private func execute(_ effect: SagaEffect<T, K>, action: any Action) {
+    private func execute(_ effect: SagaEffect<T, K>, action: T) {
         print("execute pattern:", effect.pattern, "action:", action)
         
         switch effect.pattern {
         case .takeEvery:
-            print("execute pattern:", effect.pattern, "action:", action, "saga:", effect.saga != nil )
-            if let saga = effect.saga{
-                Task.detached{
-                    let _ = await saga(action as? T)
-                }
+            print("execute pattern:", effect.pattern, "action:", action  )
+            Task.detached{
+                let _ = await effect.saga(action)
             }
             
 //        case .takeLatest:

@@ -7,6 +7,8 @@
 
 import ReSwift
 
+let sagaMonitor = SagaMonitor<any Action, Any>()
+
 func createSagaMiddleware<State>() -> Middleware<State> {
     return { dispatch, getState in
         return { next in
