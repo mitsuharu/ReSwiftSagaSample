@@ -8,7 +8,7 @@
 import Foundation
 
 let userSaga: Saga = { _ in
-    takeEvery(RequestUser.self, saga: requestUserSaga)
+    takeLeading(RequestUser.self, saga: requestUserSaga)
 }
 
 let requestUserSaga: Saga = { action async in
