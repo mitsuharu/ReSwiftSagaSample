@@ -32,7 +32,7 @@ func createSagaMiddleware<State>() -> Middleware<State> {
         return { next in
             return { action in
                 if let action = action as? SagaAction {
-                    Channel.shared.send(action)
+                    Channel.shared.put(action)
                 }
                 return next(action)
             }

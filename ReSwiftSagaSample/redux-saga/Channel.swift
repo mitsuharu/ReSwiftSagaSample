@@ -33,7 +33,7 @@ final class Channel {
     /**
      action を発行する
      */
-    func send(_ action: SagaAction){
+    func put(_ action: SagaAction){
         subject.send(action)
     }
     
