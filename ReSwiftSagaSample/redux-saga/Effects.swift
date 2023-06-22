@@ -8,7 +8,7 @@
 import Foundation
 
 func put(_ action: SagaAction) {
-    if let dispatch = SagaMonitor.shared.dispatch {
+    if let dispatch = Channel.shared.dispatch {
         Task.detached { @MainActor in
             dispatch(action)
         }
@@ -16,7 +16,7 @@ func put(_ action: SagaAction) {
 }
 
 func selector<State, T>(_ selector: (State) -> T) async throws -> T {
-    if let getState = SagaMonitor.shared.getState,
+    if let getState = Channel.shared.getState,
        let state = getState() as? State  {
       return selector(state)
     }
@@ -50,7 +50,7 @@ func fork(_ effect: @escaping Saga<Any>) async -> Void {
 @discardableResult
 func take(_ actionType: SagaAction.Type) async -> SagaAction {
     return await withCheckedContinuation { continuation in
-        SagaMonitor.shared.match(actionType) { action in
+        Channel.shared.match(actionType) { action in
             continuation.resume(returning: action)
         }
     }
@@ -58,16 +58,16 @@ func take(_ actionType: SagaAction.Type) async -> SagaAction {
 
 func takeEvery( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
     let effect = SagaStore(pattern: .takeEvery, type: action.self, saga: saga)
-    SagaMonitor.shared.addStore(effect)
+    Channel.shared.addStore(effect)
 }
 
 func takeLatest( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
     let effect = SagaStore(pattern: .takeLatest, type: action.self, saga: saga)
-    SagaMonitor.shared.addStore(effect)
+    Channel.shared.addStore(effect)
 }
 
 func takeLeading( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
     let effect = SagaStore(pattern: .takeLeading, type: action.self, saga: saga)
-    SagaMonitor.shared.addStore(effect)
+    Channel.shared.addStore(effect)
 }
 

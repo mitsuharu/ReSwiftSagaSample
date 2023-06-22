@@ -1,5 +1,5 @@
 //
-//  SagaMonitor.swift
+//  Channel.swift
 //  ReSwiftSagaSample
 //
 //  Created by Mitsuharu Emoto on 2023/06/16.
@@ -10,13 +10,13 @@ import Combine
 import ReSwift
 
 /**
- SagaMonitor
+ Channel
  - 中核となるクラス
  - 発行された Action の監視して、それぞれのルールに従って処理を行う
  */
-final class SagaMonitor {
+final class Channel {
     
-    public static let shared = SagaMonitor()
+    public static let shared = Channel()
     var dispatch: DispatchFunction? = nil
     
     var getState: (() -> Any?)? = nil
@@ -126,9 +126,9 @@ final class SagaMonitor {
     private func complete(_ completion: Subscribers.Completion<Error>){
         switch completion {
         case .finished:
-            print("SagaMonitor#finished")
+            print("Channel#finished")
         case .failure(let error):
-            assertionFailure("SagaMonitor#failure \(error)")
+            assertionFailure("Channel#failure \(error)")
         }
     }
 }

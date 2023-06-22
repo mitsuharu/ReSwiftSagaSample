@@ -24,7 +24,7 @@
 		9B3E0E5628E84B1300964B21 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5528E84B1300964B21 /* RootView.swift */; };
 		9B3E0E5B28E84B6900964B21 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5A28E84B6900964B21 /* CounterView.swift */; };
 		9B3E0E5E28E84BC900964B21 /* CounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */; };
-		9B49A5C62A3C7DC70095129A /* SagaMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */; };
+		9B49A5C62A3C7DC70095129A /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B49A5C52A3C7DC70095129A /* Channel.swift */; };
 		9B9D926B2A3C80BA004B2105 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D926A2A3C80BA004B2105 /* UserState.swift */; };
 		9B9D926D2A3C80F0004B2105 /* UserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D926C2A3C80F0004B2105 /* UserReducer.swift */; };
 		9B9D926F2A3C8104004B2105 /* UserSelectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9D926E2A3C8104004B2105 /* UserSelectors.swift */; };
@@ -77,7 +77,7 @@
 		9B3E0E5528E84B1300964B21 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		9B3E0E5A28E84B6900964B21 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		9B3E0E5D28E84BC900964B21 /* CounterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterViewModel.swift; sourceTree = "<group>"; };
-		9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SagaMonitor.swift; sourceTree = "<group>"; };
+		9B49A5C52A3C7DC70095129A /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		9B9D926A2A3C80BA004B2105 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
 		9B9D926C2A3C80F0004B2105 /* UserReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReducer.swift; sourceTree = "<group>"; };
 		9B9D926E2A3C8104004B2105 /* UserSelectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSelectors.swift; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 			children = (
 				9B9D92742A3D74E8004B2105 /* Effects.swift */,
 				BC0369242A25DA5E00FB140E /* Saga.swift */,
-				9B49A5C52A3C7DC70095129A /* SagaMonitor.swift */,
+				9B49A5C52A3C7DC70095129A /* Channel.swift */,
 				9B9D92762A3D7564004B2105 /* SagaStore.swift */,
 				9B9D92782A3D849A004B2105 /* SagaError.swift */,
 			);
@@ -444,7 +444,7 @@
 				9B9D927F2A3D8980004B2105 /* UserView.swift in Sources */,
 				9B9D927C2A3D893B004B2105 /* DemoView.swift in Sources */,
 				9B9D92732A3C811C004B2105 /* UserSaga.swift in Sources */,
-				9B49A5C62A3C7DC70095129A /* SagaMonitor.swift in Sources */,
+				9B49A5C62A3C7DC70095129A /* Channel.swift in Sources */,
 				9B9D92812A3D8994004B2105 /* UserViewModel.swift in Sources */,
 				9B3E0E4C28E8417B00964B21 /* CounterState.swift in Sources */,
 			);
