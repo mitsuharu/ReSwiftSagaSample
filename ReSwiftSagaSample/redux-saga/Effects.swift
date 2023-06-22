@@ -8,7 +8,7 @@
 import Foundation
 
 func put(_ action: SagaAction) {
-    if let dispatch = SagaMonitor.shared.dispatch {
+    if let dispatch = Channel.shared.dispatch {
         Task.detached { @MainActor in
             dispatch(action)
         }
@@ -16,7 +16,7 @@ func put(_ action: SagaAction) {
 }
 
 func selector<State, T>(_ selector: (State) -> T) async throws -> T {
-    if let getState = SagaMonitor.shared.getState,
+    if let getState = Channel.shared.getState,
        let state = getState() as? State  {
       return selector(state)
     }
@@ -50,24 +50,47 @@ func fork(_ effect: @escaping Saga<Any>) async -> Void {
 @discardableResult
 func take(_ actionType: SagaAction.Type) async -> SagaAction {
     return await withCheckedContinuation { continuation in
-        SagaMonitor.shared.match(actionType) { action in
+        Channel.shared.take(actionType) { action in
             continuation.resume(returning: action)
         }
     }
 }
 
-func takeEvery( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
-    let effect = SagaStore(pattern: .takeEvery, type: action.self, saga: saga)
-    SagaMonitor.shared.addStore(effect)
+func takeEvery( _ actionType: SagaAction.Type, saga: @escaping Saga<Any>) {
+    Task.detached {
+        while true {
+            let action = await take(actionType)
+            let _ = await saga(action)
+        }
+    }
 }
 
-func takeLatest( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
-    let effect = SagaStore(pattern: .takeLatest, type: action.self, saga: saga)
-    SagaMonitor.shared.addStore(effect)
+func takeLatest( _ actionType: SagaAction.Type, saga: @escaping Saga<Any>) {
+    let buffer = Buffer()
+    Task.detached {
+        while true {
+            let action = await take(actionType)
+            buffer.done()
+            buffer.task = Task.detached{
+                defer { buffer.done() }
+                let _ = await saga(action)
+            }
+        }
+    }
 }
 
-func takeLeading( _ action: SagaAction.Type, saga: @escaping Saga<Any>) {
-    let effect = SagaStore(pattern: .takeLeading, type: action.self, saga: saga)
-    SagaMonitor.shared.addStore(effect)
+func takeLeading( _ actionType: SagaAction.Type, saga: @escaping Saga<Any>) {
+    let buffer = Buffer()
+    Task.detached {
+        while true {
+            let action = await take(actionType)
+            if (buffer.task != nil){
+                continue
+            }
+            buffer.task = Task.detached {
+                defer { buffer.done() }
+                let _ = await saga(action)
+            }
+        }
+    }
 }
-

@@ -26,13 +26,13 @@ typealias Saga<T> = (SagaAction) async -> T
 func createSagaMiddleware<State>() -> Middleware<State> {
     return { dispatch, getState in
         
-        SagaMonitor.shared.dispatch = dispatch
-        SagaMonitor.shared.getState = getState
+        Channel.shared.dispatch = dispatch
+        Channel.shared.getState = getState
         
         return { next in
             return { action in
                 if let action = action as? SagaAction {
-                    SagaMonitor.shared.send(action)
+                    Channel.shared.put(action)
                 }
                 return next(action)
             }
