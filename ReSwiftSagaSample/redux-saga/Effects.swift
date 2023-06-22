@@ -60,7 +60,7 @@ func takeEvery( _ actionType: SagaAction.Type, saga: @escaping Saga<Any>) {
     Task.detached {
         while true {
             let action = await take(actionType)
-            let _ = await saga(action)
+            await call(saga, action)
         }
     }
 }
@@ -73,7 +73,7 @@ func takeLatest( _ actionType: SagaAction.Type, saga: @escaping Saga<Any>) {
             buffer.done()
             buffer.task = Task.detached{
                 defer { buffer.done() }
-                let _ = await saga(action)
+                await call(saga, action)
             }
         }
     }
@@ -89,7 +89,7 @@ func takeLeading( _ actionType: SagaAction.Type, saga: @escaping Saga<Any>) {
             }
             buffer.task = Task.detached {
                 defer { buffer.done() }
-                let _ = await saga(action)
+                await call(saga, action)
             }
         }
     }
