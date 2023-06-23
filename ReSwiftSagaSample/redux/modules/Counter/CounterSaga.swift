@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ReSwift
 
 let counterSaga: Saga = { _ in
     takeEvery(Increase.self, saga: increaseSaga)
@@ -31,7 +30,7 @@ private let decreaseSaga: Saga = { action async in
     print("decreaseSaga#end", action )
 }
 
-private let moveSaga: Saga = { (_ action: Action?) in
+private let moveSaga: Saga = { action async in
     guard let move = action as? Move else {
         return
     }

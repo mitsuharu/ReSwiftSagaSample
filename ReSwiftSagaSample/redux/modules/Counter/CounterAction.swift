@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ReSwift
 
 class CounterAction: SagaAction {}
 
