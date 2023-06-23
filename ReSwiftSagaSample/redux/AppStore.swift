@@ -18,10 +18,8 @@ func makeAppStore() -> Store<AppState> {
         middleware: [sagaMiddleware]
     )
 
-    // これは初回設定sagaみたいな処理にする。ここは仮に置いている
-    Task {
-        await call(counterSaga)
-        await call(userSaga)
+    Task.detached {
+        await fork(appSage)
     }
     
     return store

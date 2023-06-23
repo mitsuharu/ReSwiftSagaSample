@@ -27,7 +27,6 @@ final class CounterViewModel: ObservableObject, StoreSubscriber {
     
     public func increase() {
         appStore.dispatch(Increase())
-//        appStore.dispatch(BBB(userID: "1234"))
     }
     
     public func decrease() {
