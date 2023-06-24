@@ -49,11 +49,8 @@ func fork(_ effect: @escaping Saga<Any>) async -> Void {
 
 @discardableResult
 func take(_ actionType: SagaAction.Type) async -> SagaAction {
-    return await withCheckedContinuation { continuation in
-        Channel.shared.take(actionType) { action in
-            continuation.resume(returning: action)
-        }
-    }
+    let action = await Channel.shared.take(actionType).value
+    return action
 }
 
 func takeEvery( _ actionType: SagaAction.Type, saga: @escaping Saga<Any>) {

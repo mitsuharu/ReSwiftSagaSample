@@ -18,9 +18,14 @@ final class Channel {
     
     public static let shared = Channel()
     private let subject = PassthroughSubject<SagaAction, Error>()
+    private var subscriptions = [AnyCancellable]()
     
     public var dispatch: DispatchFunction? = nil
     public var getState: (() -> Any?)? = nil
+    
+    deinit{
+        cancel()
+    }
     
     /**
      action を発行する
@@ -28,22 +33,20 @@ final class Channel {
     func put(_ action: SagaAction){
         subject.send(action)
     }
-    
+      
     /**
-     特定の action を監視する
+     特定の action が発行されるまで監視する
      */
-    func take(_ actionType: SagaAction.Type, receive: @escaping (_ action: SagaAction) -> Void ){
-        // 監視は一度限りで行い、検出後は破棄する
-        // 破棄しないと、検出した action を対応にした場合、withCheckedContinuation で二重呼び出しにカウントされクラッシュする
-        var cancellable: AnyCancellable? = nil
-        cancellable = subject.filter {
-            type(of: $0) == actionType
-        }.sink { [weak self] in
-            self?.complete($0)
-            cancellable?.cancel()
-        } receiveValue: {
-            receive($0)
-            cancellable?.cancel()
+    func take(_ actionType: SagaAction.Type ) -> Future <SagaAction, Never> {
+        return Future { [weak self] promise in
+            guard let self = self else { return }
+            self.subject.filter {
+                type(of: $0) == actionType
+            }.sink { [weak self] in
+                self?.complete($0)
+            } receiveValue: {
+                promise(.success($0))
+            }.store(in: &self.subscriptions)
         }
     }
     
@@ -58,5 +61,9 @@ final class Channel {
         case .failure(let error):
             assertionFailure("Channel#failure \(error)")
         }
+    }
+    
+    private func cancel(){
+        subscriptions.forEach { $0.cancel() }
     }
 }
