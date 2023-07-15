@@ -1,9 +1,9 @@
 Sample Project for Redux Saga with ReSwift
 ==
 
-
 - [Redux Saga](https://redux-saga.js.org/) を Swift で再現したサンプルプロジェクトです。
 - 完全再現ではなく、設計思想を参考にしつつ、一部機能を再現しています
+- このサンプルコードは、MVVM + Redux Saga を採用しています
 
 ## Develop
 
