@@ -6,7 +6,15 @@
       "location" : "https://github.com/ReSwift/ReSwift",
       "state" : {
         "branch" : "master",
-        "revision" : "e94737282850fa038b625b4e351d1608a3d02cee"
+        "revision" : "a5a6ad2ce1005cfa1f1bd949122d03fdef7a56ba"
+      }
+    },
+    {
+      "identity" : "reswift-saga",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mitsuharu/ReSwift-Saga",
+      "state" : {
+        "revision" : "01d080a093c8ee45497edf4d4ef74933d7909666"
       }
     }
   ],

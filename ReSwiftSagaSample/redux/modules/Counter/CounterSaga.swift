@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ReSwiftSaga
 
 let counterSaga: Saga = { _ in
     takeEvery(Increase.self, saga: increaseSaga)
