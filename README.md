@@ -6,9 +6,10 @@ Sample Project for Redux Saga with ReSwift
 
 ## for iOSDC Japan 2023
 
-- このリポジトリで開発している内容は iOSDC Japan 2023 に [記事](https://fortee.jp/iosdc-japan-2023/proposal/d3c4feb1-0b2c-403b-b47c-6db885bc70d8) に寄稿しました。
+- このリポジトリで開発した内容は iOSDC Japan 2023 の [記事](https://fortee.jp/iosdc-japan-2023/proposal/d3c4feb1-0b2c-403b-b47c-6db885bc70d8) に寄稿しました。
 - 記事は [mitsuharu/iosdc-2023-pamphlet](https://github.com/mitsuharu/iosdc-2023-pamphlet) でも読むことができます。
-- 現在、リリースやOSS公開に向けて、[mitsuharu/ReSwift-Saga](https://github.com/mitsuharu/ReSwift-Saga) で開発しています。
+- 現在は [mitsuharu/ReSwift-Saga](https://github.com/mitsuharu/ReSwift-Saga) で開発しています。
+- このリポジトリは作成したライブラリを Swift Package Manager で導入の確認事例に利用しています。
 
 
 ## Develop

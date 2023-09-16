@@ -759,8 +759,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mitsuharu/ReSwift-Saga";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = revision;
+				revision = 01d080a093c8ee45497edf4d4ef74933d7909666;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
