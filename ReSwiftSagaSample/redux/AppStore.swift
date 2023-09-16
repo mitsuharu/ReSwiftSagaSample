@@ -7,6 +7,7 @@
 
 import Foundation
 import ReSwift
+import ReSwiftSaga
 
 func makeAppStore() -> Store<AppState> {
     
@@ -19,7 +20,7 @@ func makeAppStore() -> Store<AppState> {
     )
 
     Task.detached {
-        await fork(appSage)
+        try? await fork(appSage)
     }
     
     return store

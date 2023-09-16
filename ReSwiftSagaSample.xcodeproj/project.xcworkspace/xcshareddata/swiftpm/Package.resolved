@@ -8,6 +8,15 @@
         "branch" : "master",
         "revision" : "e94737282850fa038b625b4e351d1608a3d02cee"
       }
+    },
+    {
+      "identity" : "reswift-saga",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mitsuharu/ReSwift-Saga",
+      "state" : {
+        "branch" : "main",
+        "revision" : "01d080a093c8ee45497edf4d4ef74933d7909666"
+      }
     }
   ],
   "version" : 2
