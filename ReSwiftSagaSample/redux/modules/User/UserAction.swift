@@ -6,24 +6,18 @@
 //
 
 import Foundation
+import ReSwiftSaga
 
-class UserAction: SagaAction {}
+protocol UserAction: SagaAction {}
 
-class RequestUser: UserAction {
+struct RequestUser: UserAction {
     let userID: String
-    init(userID: String) {
-        self.userID = userID
-    }
 }
 
-class StoreUserName: UserAction {
+struct StoreUserName: UserAction {
     let name: String
-    init(name: String) {
-        self.name = name
-    }
 }
 
-class ClearUser: UserAction {
-    
+struct ClearUser: UserAction {
 }
 
